@@ -1,0 +1,173 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+head {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    height: 100%;
+    width: 100%;
+    background: #fff5df;
+}
+
+.name-game {
+    margin: 40px;
+    color: #862200;
+    font-size: 80px;
+    font-weight: bold;
+}
+
+.main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.playground {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+
+    background: #D4F4FF;
+    min-width: 350px;
+    min-height: 550px;
+    max-height: 550px;
+    margin: 0 40px;
+}
+
+.playground__form {
+    border-bottom: 2px solid #862200;
+    background: #A7C201;
+    width: 100%;
+}
+
+.form {
+    min-width: 80%;
+    margin: 20px;
+    padding: 5px;
+    border-radius: 30px;
+    border: 2px solid #862200;
+    background: #FFF4D8;
+}
+
+.form__item {
+    padding: 5px;
+    margin: 10px 0;
+    font-size: 20px;
+}
+
+.form__label {
+    margin: 5px;
+    color: white;
+    background: #FD6229;
+    border: 2px solid #862200;
+    border-radius: 50%;
+}
+
+.form__input {
+    border-radius: 30px;
+    background: #FFF4D8;
+}
+
+.form__input:focus {
+    outline: none;
+    background: #FFF4D8;
+}
+
+
+.playground__used-cities {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    width: 100%;
+    overflow-y: auto;
+    padding: 10px;
+    background: #D4F4FF;
+}
+
+.answer {
+    margin: 10px 20px 0 20px;
+    padding: 5px;
+    border-radius: 15px;
+    border: 2px solid #862200;
+}
+
+.answer--comp {
+    align-self: flex-start;
+    background: #FFEB00;
+}
+
+.answer--user {
+    align-self: flex-end;
+    background: #FF9A00;
+}
+
+.message {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+
+    position: absolute;
+    left:50%;
+    margin-left:-25%;
+    top:50%;
+    margin-top:-25%;
+
+    min-width: 200px;
+    min-height: 150px;
+
+    padding: 15px;
+    border: 2px solid #01ABE6;
+    background: white;
+    border-radius: 5px;
+
+    display: none;
+}
+
+.message__text {
+    padding: 5px;
+    font-size: 20px;
+    line-height: 28px;
+    color: #01ABE6;
+}
+
+.message__button {
+    padding: 10px;
+    font-size: 16px;
+    background: #FD6229;
+    color: white;
+    border: 2px solid #862200;
+    border-radius: 10px;
+}
+
+
+
+
+
+
+.map {
+    display: none;
+    background: grey;
+    min-width: 400px;
+    min-height: 450px;
+
+    margin: 0 10px 0 40px;
+}
