@@ -17,24 +17,25 @@
         <div class="playground__form">
             <form class="form">
                 <label class="form__item form__label" for="user"></label>
-                <input class="form__item form__input" id="user" type="text" placeholder="Введите город">
+                <input class="form__item form__input" id="user" type="text" autofocus placeholder="Введите город">
             </form>
-        </div>
-
-        <div class="message">
-            <div class="message__text">Вы победили!</div>
-            <button class="message__button">Хорошо</button>
         </div>
 
     </div>
 
-    <div class="map"></div>
-
-
+    <div class="map">
+    </div>
 
 </main>
 
-<script src="js/cities.js"></script>
+<div class="message-background message-background--hidden">
+<div class="message">
+    <div class="message__text">Вы победили!</div>
+    <button class="message__button">Хорошо</button>
+</div>
+</div>
 
+<script src="js/game.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=game.initMap" async defer></script>
 </body>
 </html>

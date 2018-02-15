@@ -1,7 +1,12 @@
-class Cities {
+const GOOGLE_MAPS_API_KEY = '';
+
+class Game {
     constructor() {
 
-        this.cities = ['Минск', 'Кобрин', 'Новополоцк', 'Калиненград',
+        this.map = null;
+        this.geocoder = null;
+
+        this.cities = ['Минск', 'Кобрин', 'Новополоцк', 'Калининград',
             'Драгичин', 'Несвиж', 'Жабинка', 'Алжир', 'Рогочев', 'Витебск'];
         this.remainingCities  = this.cities;
         this.usedCities = [];
@@ -18,6 +23,37 @@ class Cities {
         this.showCompAnswer(this.city);
         this.changeLetter(this.currentLetter);
         this.deleteCity(this.city);
+    }
+
+
+    initMap() {
+        // Create a map object and specify the DOM element for display.
+        this.map = new google.maps.Map(document.querySelector('.map'), {
+            center: {lat: -34.397, lng: 150.644},
+            zoom: 1
+        });
+
+        this.geocoder = new google.maps.Geocoder();
+    }
+
+    showCityOnMap(address) {
+        const map = this.map;
+
+        this.geocoder.geocode({'address': address}, function (results, status) {
+            if (status === 'OK') {
+
+                map.setCenter(results[0].geometry.location);
+
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: results[0].geometry.location
+                });
+
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+
     }
 
     inputHandler(event) {
@@ -37,6 +73,8 @@ class Cities {
                     this.currentLetter = this.getLastLetter(this.city);
                     this.changeLetter(this.currentLetter);
                     this.deleteCity(this.city);
+                    this.showCityOnMap(this.city);
+
 
                     this.city = this.getCityFromComp();
 
@@ -94,7 +132,8 @@ class Cities {
     }
 
     showMessage(text) {
-        console.log(text);
+        let messageBackgroundElement = document.querySelector('.message-background');
+        messageBackgroundElement.classList.toggle('message-background--hidden');
     }
 
 
@@ -165,4 +204,8 @@ class Cities {
     }
 }
 
-let cities = new Cities();
+let game = new Game();
+
+window.game = game;
+
+

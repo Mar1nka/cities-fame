@@ -24,7 +24,7 @@ body {
 .name-game {
     margin: 40px;
     color: #862200;
-    font-size: 80px;
+    font-size: 48px;
     font-weight: bold;
 }
 
@@ -51,7 +51,7 @@ body {
 }
 
 .playground__form {
-    border-bottom: 2px solid #862200;
+    border-top: 2px solid #862200;
     background: #A7C201;
     width: 100%;
 }
@@ -72,6 +72,14 @@ body {
 }
 
 .form__label {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 40px;
+    height: 40px;
+
     margin: 5px;
     color: white;
     background: #FD6229;
@@ -104,9 +112,10 @@ body {
 
 .answer {
     margin: 10px 20px 0 20px;
-    padding: 5px;
+    padding: 5px 10px;
     border-radius: 15px;
     border: 2px solid #862200;
+    font-size: 20px;
 }
 
 .answer--comp {
@@ -119,27 +128,37 @@ body {
     background: #FF9A00;
 }
 
+.message-background {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    background: black;
+    opacity: 0.6;
+}
+
+.message-background--hidden {
+    display: none;
+}
+
 .message {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
 
-    position: absolute;
-    left:50%;
-    margin-left:-25%;
-    top:50%;
-    margin-top:-25%;
-
-    min-width: 200px;
-    min-height: 150px;
+    min-width: 280px;
+    min-height: 180px;
 
     padding: 15px;
     border: 2px solid #01ABE6;
     background: white;
     border-radius: 5px;
-
-    display: none;
 }
 
 .message__text {
@@ -159,15 +178,13 @@ body {
 }
 
 
-
-
-
-
 .map {
-    display: none;
-    background: grey;
+    display: block;
     min-width: 400px;
-    min-height: 450px;
-
+    min-height: 550px;
     margin: 0 10px 0 40px;
+
+    background: grey;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
 }
