@@ -8,11 +8,17 @@
 </head>
 <body>
 
-<div class="name-game">Города</div>
+<div class="title">Города</div>
+
 <main class="main">
 
     <div class="playground">
-        <div class="playground__used-cities"></div>
+        <div class="playground__avatars">
+            <div class="playground__avatar playground__avatar--computer">Компьютер</div>
+            <div class="playground__avatar playground__avatar--user">Игрок</div>
+        </div>
+
+        <div class="playground__answers"></div>
 
         <div class="playground__form">
             <form class="form">
@@ -30,12 +36,12 @@
 
 <div class="message-background message-background--hidden">
 <div class="message">
-    <div class="message__text">Вы победили!</div>
+    <div class="message__text"></div>
     <button class="message__button">Хорошо</button>
 </div>
 </div>
 
 <script src="js/game.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=GOOGLE_MAPS_API_KEY&callback=game.initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCvBTQfajxaxCFHPkyynzwt0rJIXbUPfCY&callback=game.initMap" async defer></script>
 </body>
 </html>

@@ -1,28 +1,48 @@
 const GOOGLE_MAPS_API_KEY = '';
 
+const PLAYER_TYPE = {
+    user: 1,
+    computer: 2
+};
+
 class Game {
     constructor() {
-
         this.map = null;
         this.geocoder = null;
-
-        this.cities = ['Минск', 'Кобрин', 'Новополоцк', 'Калининград',
-            'Драгичин', 'Несвиж', 'Жабинка', 'Алжир', 'Рогочев', 'Витебск'];
-        this.remainingCities  = this.cities;
+        this.cities = [];
         this.usedCities = [];
+        this.unusedLetters = ['ь', 'ъ', 'ы', 'й', `'`];
+        this.currentLetter = '';
 
-        this.lastLetters = ['ь', 'ъ', 'ы', 'й'];
-
-        this.city = 'Минск';
-        this.currentLetter = this.getLastLetter(this.city);
+        this.answersElement = document.querySelector('.playground__answers');
 
         this.inputHandler = this.inputHandler.bind(this);
-
         document.querySelector('.form__input').addEventListener('keydown', this.inputHandler);
 
-        this.showCompAnswer(this.city);
-        this.changeLetter(this.currentLetter);
-        this.deleteCity(this.city);
+        this.closeMessage = this.closeMessage.bind(this);
+        document.querySelector('.message__button').addEventListener('click', this.closeMessage);
+
+        this.loadCities();
+    }
+
+    loadCities() {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', 'data/cities.json', true);
+        xhr.send();
+
+        xhr.onreadystatechange = () => {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    this.cities = JSON.parse(xhr.responseText);
+                } else {
+                    this.showMessage('Произошла ошибка при загрузке данных')
+                }
+            }
+        }
+    }
+
+    init() {
+        this.handlerRightAnswer('Астана', PLAYER_TYPE.computer);
     }
 
 
@@ -34,12 +54,14 @@ class Game {
         });
 
         this.geocoder = new google.maps.Geocoder();
+
+        this.init();
     }
 
     showCityOnMap(address) {
         const map = this.map;
 
-        this.geocoder.geocode({'address': address}, function (results, status) {
+        this.geocoder.geocode({'address': address}, (results, status) => {
             if (status === 'OK') {
 
                 map.setCenter(results[0].geometry.location);
@@ -50,7 +72,7 @@ class Game {
                 });
 
             } else {
-                alert('Geocode was not successful for the following reason: ' + status);
+                this.showMessage('Город не найден на карте');
             }
         });
 
@@ -61,28 +83,19 @@ class Game {
             event.preventDefault();
 
             let city = event.target.value.trim();
+            city = city[0].toUpperCase() + city.slice(1);
 
-            if(this.isCorrectFirstLetter(city)) {
-                this.city = city[0].toUpperCase() + city.slice(1);
-
-                if(this.isUsedCities(this.city)) {
+            if (this.isCorrectFirstLetter(city)) {
+                if (this.isUsedCities(city)) {
                     this.showMessage('Этот город уже был');
-                } else if(this.isCorrectCity(this.city)) {
+                } else if (this.isCorrectCity(city)) {
                     this.cleanInput();
-                    this.showUserAnswer(this.city);
-                    this.currentLetter = this.getLastLetter(this.city);
-                    this.changeLetter(this.currentLetter);
-                    this.deleteCity(this.city);
-                    this.showCityOnMap(this.city);
+                    this.handlerRightAnswer(city, PLAYER_TYPE.user);
 
+                    city = this.getCityFromComputer();
 
-                    this.city = this.getCityFromComp();
-
-                    if(this.city !== '') {
-                        this.showCompAnswer(this.city);
-                        this.currentLetter = this.getLastLetter(this.city);
-                        this.changeLetter(this.currentLetter);
-                        this.deleteCity(this.city);
+                    if (city !== '') {
+                        this.handlerRightAnswer(city, PLAYER_TYPE.computer);
                     } else {
                         this.showMessage('Вы победили');
                     }
@@ -92,15 +105,23 @@ class Game {
             } else {
                 this.showMessage(`Город должен начинаться с буквы "${this.currentLetter}"`);
             }
-
-
         }
+    }
+
+    handlerRightAnswer(city, playerType) {
+        this.showAnswer(city, playerType);
+        this.currentLetter = this.getLastLetter(city);
+        this.changeLetter(this.currentLetter);
+        this.removeCity(city);
+        this.addCityToUsed(city);
+        this.showCityOnMap(city);
+        this.answersElement.scrollTop = this.answersElement.scrollHeight;
     }
 
     isCorrectFirstLetter(city) {
         let result = false;
 
-        if(city[0].toUpperCase() === this.currentLetter) {
+        if (city[0] === this.currentLetter) {
             result = true;
         }
 
@@ -113,6 +134,7 @@ class Game {
         for (let i = 0; i < this.usedCities.length; i++) {
             if (this.usedCities[i] === city) {
                 result = true;
+                break;
             }
         }
 
@@ -123,15 +145,27 @@ class Game {
         let result = false;
 
         for (let i = 0; i < this.cities.length; i++) {
-            if (this.cities[i] === city) {
+            if (this.cities[i].toLowerCase() === city.toLowerCase()) {
                 result = true;
+                break;
             }
         }
 
         return result;
     }
 
+
+
+
     showMessage(text) {
+        let messageTextElement = document.querySelector('.message__text');
+        messageTextElement.textContent = text;
+
+        let messageBackgroundElement = document.querySelector('.message-background');
+        messageBackgroundElement.classList.toggle('message-background--hidden');
+    }
+
+    closeMessage() {
         let messageBackgroundElement = document.querySelector('.message-background');
         messageBackgroundElement.classList.toggle('message-background--hidden');
     }
@@ -147,55 +181,55 @@ class Game {
         element.value = '';
     }
 
-    showUserAnswer(city) {
+    showAnswer(city, playerType) {
         let element = document.createElement('div');
+        let playerAnswerClassNames = {
+            1: 'user',
+            2: 'computer'
+        };
+
         element.classList.add('answer');
-        element.classList.add('answer--user');
+        element.classList.add(`answer--${playerAnswerClassNames[playerType]}`);
         element.textContent = city;
 
-        let parentElement = document.querySelector('.playground__used-cities');
+        let parentElement = document.querySelector('.playground__answers');
         parentElement.appendChild(element);
 
-    }
-
-    showCompAnswer(city) {
-        let element = document.createElement('div');
-        element.classList.add('answer');
-        element.classList.add('answer--comp');
-        element.textContent = city;
-
-        let parentElement = document.querySelector('.playground__used-cities');
-        parentElement.appendChild(element);
     }
 
     getLastLetter(city) {
-        let letter = city[city.length - 1].toUpperCase();
+        let letter = '';
 
-        for(let i = 0; i < this.lastLetters.length; i++ ) {
-            if(letter === this.lastLetters[i].toUpperCase()) {
-                letter = city[city.length - 2].toUpperCase();
+        for (let i = city.length - 1; i >= 0; i--) {
+            if (this.unusedLetters.indexOf(city[i]) === -1) {
+                letter = city[i];
+                break;
             }
         }
 
-        return letter;
+        return letter.toUpperCase();
     }
 
-    deleteCity(city) {
+    removeCity(city) {
 
-        for(let  i = 0; i < this.remainingCities.length; i++) {
-            if(this.remainingCities[i] === city) {
-                this.remainingCities.splice(i, 1);
+        for (let i = 0; i < this.cities.length; i++) {
+            if (this.cities[i] === city) {
+                this.cities.splice(i, 1);
                 break;
             }
         }
     }
 
-    getCityFromComp() {
+    addCityToUsed(city) {
+        this.usedCities.push(city)
+    }
+
+    getCityFromComputer() {
         let city = '';
 
-        for(let  i = 0; i < this.remainingCities.length; i++) {
-            if(this.remainingCities[i][0] === this.currentLetter) {
-                city = this.remainingCities[i];
+        for (let i = 0; i < this.cities.length; i++) {
+            if (this.cities[i][0] === this.currentLetter) {
+                city = this.cities[i];
                 break;
             }
         }

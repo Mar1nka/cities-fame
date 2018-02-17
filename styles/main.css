@@ -5,7 +5,7 @@
     border: 0;
 }
 
-head {
+html {
     height: 100%;
     width: 100%;
 }
@@ -13,41 +13,78 @@ head {
 body {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 
     height: 100%;
     width: 100%;
-    background: #fff5df;
-}
+    background: url("../images/background.png");
+    background-repeat: no-repeat;
+    background-position: center center;
 
-.name-game {
-    margin: 40px;
-    color: #862200;
-    font-size: 48px;
-    font-weight: bold;
 }
 
 .main {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: flex-start;
     width: 100%;
+}
+
+.title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 50px;
+    color: #fbff57;
+    font-size: 48px;
+    font-weight: bold;
 }
 
 .playground {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
-    position: relative;
 
     background: #D4F4FF;
     min-width: 350px;
     min-height: 550px;
     max-height: 550px;
     margin: 0 40px;
+}
+
+.playground__avatars {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    border-bottom: 2px solid #862200;
+    background: #A7C201;
+    padding: 15px 10px;
+
+    width: 100%;
+    min-height: 60px;
+}
+
+.playground__avatar {
+    padding: 5px 10px;
+    border-radius: 15px;
+
+    min-height: 24px;
+    min-width: 24px;
+
+    border: 2px solid #862200;
+    font-size: 20px;
+}
+
+.playground__avatar--computer {
+    background: #FFEB00;
+}
+
+.playground__avatar--user {
+    background: #FF9A00;
 }
 
 .playground__form {
@@ -57,7 +94,6 @@ body {
 }
 
 .form {
-    min-width: 80%;
     margin: 20px;
     padding: 5px;
     border-radius: 30px;
@@ -66,8 +102,6 @@ body {
 }
 
 .form__item {
-    padding: 5px;
-    margin: 10px 0;
     font-size: 20px;
 }
 
@@ -85,6 +119,7 @@ body {
     background: #FD6229;
     border: 2px solid #862200;
     border-radius: 50%;
+    text-transform: uppercase;
 }
 
 .form__input {
@@ -98,11 +133,12 @@ body {
 }
 
 
-.playground__used-cities {
+.playground__answers {
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     align-items: center;
+
+    flex: 1;
 
     width: 100%;
     overflow-y: auto;
@@ -111,14 +147,13 @@ body {
 }
 
 .answer {
-    margin: 10px 20px 0 20px;
     padding: 5px 10px;
     border-radius: 15px;
     border: 2px solid #862200;
     font-size: 20px;
 }
 
-.answer--comp {
+.answer--computer {
     align-self: flex-start;
     background: #FFEB00;
 }
@@ -138,8 +173,7 @@ body {
     width: 100%;
     height: 100%;
     z-index: 10;
-    background: black;
-    opacity: 0.6;
+    background: rgba(0, 0, 0, 0.6);
 }
 
 .message-background--hidden {
@@ -177,12 +211,18 @@ body {
     border-radius: 10px;
 }
 
+.message__button:hover {
+    cursor: pointer;
+    background: #fdae36;
+    transition: background 0.3s;
+}
+
 
 .map {
     display: block;
-    min-width: 400px;
+    min-width: 600px;
     min-height: 550px;
-    margin: 0 10px 0 40px;
+    margin: 0 40px;
 
     background: grey;
     border: 1px solid #ccc;
