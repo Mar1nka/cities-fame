@@ -22,46 +22,64 @@ class Game {
         this.closeMessage = this.closeMessage.bind(this);
         document.querySelector('.message__button').addEventListener('click', this.closeMessage);
 
-        this.loadCities();
+        this.loadCities().then((data) => {
+            this.cities = data;
+            this.initMap();
+            this.startGame();
+        }, (error) => {
+            this.showMessage('Произошла ошибка при загрузке данных');
+        });
     }
 
-    loadCities() {
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', 'data/cities.json', true);
-        xhr.send();
+    /**
+     * Запрашиваем список всех городов
+     *
+     */
+     loadCities() {
+        /*
+        * Список городов заранее сформирован в файле cities.json.
+        * Это позволяет не зависить от сторонних API для получения городов,
+        * а так же упрощает логику для нахождения города со стороны компьютера.
+        * Выбираем первый неназванный город на необходимую букву.
+        * Объем файла со всеми городами незначителен, чтобы предпочесть запрос для каждого города индивидуально.
+        **/
 
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    this.cities = JSON.parse(xhr.responseText);
-                } else {
-                    this.showMessage('Произошла ошибка при загрузке данных')
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'data/cities.json', true);
+            xhr.send();
+
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        const cities = JSON.parse(xhr.responseText);
+                        resolve(cities);
+                    } else {
+                        reject();
+                    }
                 }
             }
-        }
+        });
     }
 
-    init() {
+    startGame() {
         this.handlerRightAnswer('Астана', PLAYER_TYPE.computer);
     }
 
 
     initMap() {
-        // Create a map object and specify the DOM element for display.
         this.map = new google.maps.Map(document.querySelector('.map'), {
             center: {lat: -34.397, lng: 150.644},
             zoom: 1
         });
 
         this.geocoder = new google.maps.Geocoder();
-
-        this.init();
     }
 
-    showCityOnMap(address) {
+    showCityOnMap(city) {
         const map = this.map;
 
-        this.geocoder.geocode({'address': address}, (results, status) => {
+        this.geocoder.geocode({'address': city}, (results, status) => {
             if (status === 'OK') {
 
                 map.setCenter(results[0].geometry.location);
@@ -72,7 +90,7 @@ class Game {
                 });
 
             } else {
-                this.showMessage('Город не найден на карте');
+                this.showMessage(`Город ${city} не найден на карте`);
             }
         });
 
@@ -153,8 +171,6 @@ class Game {
 
         return result;
     }
-
-
 
 
     showMessage(text) {
