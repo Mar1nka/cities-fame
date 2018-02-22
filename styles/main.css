@@ -18,6 +18,8 @@ body {
 
     height: 100%;
     width: 100%;
+    background: #296fa2
+
 }
 
 .main {
@@ -32,7 +34,7 @@ body {
     width: 100%;
     text-align: center;
     margin-bottom: 50px;
-    color: red;
+    color: #fbff57;
     font-size: 48px;
     font-weight: bold;
 }

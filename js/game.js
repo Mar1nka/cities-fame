@@ -1,8 +1,12 @@
-const GOOGLE_MAPS_API_KEY = '';
 
 const PLAYER_TYPE = {
     user: 1,
     computer: 2
+};
+
+const PLAYER_COLORS = {
+    1: '#ff8739',
+    2: '#eae80b'
 };
 
 class Game {
@@ -69,14 +73,13 @@ class Game {
 
     initMap() {
         this.map = new google.maps.Map(document.querySelector('.map'), {
-            center: {lat: -34.397, lng: 150.644},
-            zoom: 1
+            zoom: 2
         });
 
         this.geocoder = new google.maps.Geocoder();
     }
 
-    showCityOnMap(city) {
+    showCityOnMap(city, playerType) {
         const map = this.map;
 
         this.geocoder.geocode({'address': city}, (results, status) => {
@@ -86,7 +89,14 @@ class Game {
 
                 const marker = new google.maps.Marker({
                     map: map,
-                    position: results[0].geometry.location
+                    position: results[0].geometry.location,
+                    icon: {
+                        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                        strokeColor: "#000000",
+                        fillColor: PLAYER_COLORS[playerType],
+                        fillOpacity: 1,
+                        scale: 1
+                    },
                 });
 
             } else {
@@ -132,7 +142,7 @@ class Game {
         this.changeLetter(this.currentLetter);
         this.removeCity(city);
         this.addCityToUsed(city);
-        this.showCityOnMap(city);
+        this.showCityOnMap(city, playerType);
         this.answersElement.scrollTop = this.answersElement.scrollHeight;
     }
 
